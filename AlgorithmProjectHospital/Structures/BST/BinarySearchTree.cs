@@ -8,28 +8,19 @@ namespace AlgorithmProjectHospital.Structures.BST
 {
     internal class BinarySearchTree<T> where T : IComparable<T>
     {
-        public BinarySearchTree() { }
+        public TreeNode<T> Root { get; private set; }
+        public BinarySearchTree() { } // O(1)
 
-        private TreeNode<T> root;
-        public TreeNode<T> Root
+        private TreeNode<T> FindNode(T data) // O(log n)
         {
-            get { return root; }
-        }
-
-
-        //O(Log n)
-
-
-        private TreeNode<T> FindNode(T data)
-        {
-            if (root != null)
+            if (Root != null)
             {
-                return root.Find(data);
+                return Root.Find(data);
             }
             return null;
         }
 
-        public bool TryFind(T data, out T found)
+        public bool TryFind(T data, out T found) // O(log n)
         {
             var result = FindNode(data);
             if (result != null) { 
@@ -40,20 +31,18 @@ namespace AlgorithmProjectHospital.Structures.BST
             return false;
         }
 
-        public void Insert(T data)
+        public void Insert(T data) // O(log n)
         {
-            if (root != null)
-            {
-                root.Insert(data);
-            }
-            root = new TreeNode<T>(data);
+            if (Root != null)
+                Root.Insert(data);
+            else
+                Root = new TreeNode<T>(data);
         }
 
-        //O(Log n)
-        public void Remove(T data)
+        public void Remove(T data) // O(log n)
         {
-            TreeNode<T> current = root;
-            TreeNode<T> parent = root;
+            TreeNode<T> current = Root;
+            TreeNode<T> parent = Root;
             bool isLeftChild = false;
 
             if (current == null)
@@ -83,9 +72,9 @@ namespace AlgorithmProjectHospital.Structures.BST
 
             if (current.RightNode == null && current.LeftNode == null)
             {
-                if (current == root)
+                if (current == Root)
                 {
-                    root = null;
+                    Root = null;
                 }
                 else
                 {
@@ -101,9 +90,9 @@ namespace AlgorithmProjectHospital.Structures.BST
             }
             else if (current.RightNode == null)
             {
-                if (current == root)
+                if (current == Root)
                 {
-                    root = current.LeftNode;
+                    Root = current.LeftNode;
                 }
                 else
                 {
@@ -119,9 +108,9 @@ namespace AlgorithmProjectHospital.Structures.BST
             }
             else if (current.LeftNode == null)
             {
-                if (current == root)
+                if (current == Root)
                 {
-                    root = current.RightNode;
+                    Root = current.RightNode;
                 }
                 else
                 {
@@ -138,9 +127,9 @@ namespace AlgorithmProjectHospital.Structures.BST
             else
             {
                 TreeNode<T> successor = GetSuccessor(current);
-                if (current == root)
+                if (current == Root)
                 {
-                    root = successor;
+                    Root = successor;
                 }
                 else if (isLeftChild)
                 {
@@ -155,7 +144,7 @@ namespace AlgorithmProjectHospital.Structures.BST
 
         }
 
-        private TreeNode<T> GetSuccessor(TreeNode<T> node)
+        private TreeNode<T> GetSuccessor(TreeNode<T> node)  // O(log n)
         {
             TreeNode<T> parentOfSuccessor = node;
             TreeNode<T> successor = node;
@@ -177,8 +166,8 @@ namespace AlgorithmProjectHospital.Structures.BST
             return successor;
         }
 
-        //O(Log n) Mark Node as deleted
-        public void SoftDelete(T data)
+        // Mark node as deleted
+        public void SoftDelete(T data)  // O(log n)
         {
             TreeNode<T> toDelete = FindNode(data);
             if (toDelete != null)

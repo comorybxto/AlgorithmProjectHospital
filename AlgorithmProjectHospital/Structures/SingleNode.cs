@@ -11,7 +11,7 @@ namespace AlgorithmProjectHospital.Structures
         public SingleNode<T> Next { get; set; }
         public T Value { get; set; }
 
-        public SingleNode(T value)
+        public SingleNode(T value) // O(1)
         {
             Value = value;
         }

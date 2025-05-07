@@ -11,6 +11,12 @@ namespace AlgorithmProjectHospital
         public string Diagnosis { get; set; }
         public string Treatment { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Examination"/> class with the specified date, diagnosis, and treatment.
+        /// </summary>
+        /// <param name="date">The date of the examination.</param>
+        /// <param name="diagnosis">The diagnosis made during the examination.</param>
+        /// <param name="treatment">The treatment prescribed during the examination.</param>
         public Examination(DateTime date, string diagnosis, string treatment)
         {
             Date = date;

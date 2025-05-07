@@ -13,32 +13,32 @@ namespace AlgorithmProjectHospital.Structures
     {
         public SingleNode<T> Head { get; set; }
 
-        public SinglyLinkedList()
+        public SinglyLinkedList() // O(1)
         {
         }
 
-        public SinglyLinkedList(IEnumerable<T> collection)
+        public SinglyLinkedList(IEnumerable<T> collection) // O(n)
         {
             foreach (var item in collection)
                 this.AddLast(item);
         }
 
-        private bool isHeadNull => Head == null;
+        private bool isHeadNull => Head == null; // O(1)
 
-        public void AddFirst(T value)
+        public void AddFirst(T value) // O(1)
         {
             var newNode=new SingleNode<T>(value);
             newNode.Next=Head;
             Head = newNode;
         }
 
-        public void AddFirst(SingleNode<T> newNode)
+        public void AddFirst(SingleNode<T> newNode) // O(1)
         {
             newNode.Next = Head;
             Head = newNode;
         }
 
-        public void AddLast(T value)
+        public void AddLast(T value) // O(n)
         {
             var newNode = new SingleNode<T>(value);
 
@@ -56,7 +56,7 @@ namespace AlgorithmProjectHospital.Structures
             current.Next = newNode;
         }
 
-        public void AddAfter(SingleNode<T> node, T value)
+        public void AddAfter(SingleNode<T> node, T value) // O(n)
         {
 
             if (node == null)
@@ -82,7 +82,7 @@ namespace AlgorithmProjectHospital.Structures
             ErrEmpty();
         }
 
-        public void AddBefore(SingleNode<T> node, T value)
+        public void AddBefore(SingleNode<T> node, T value) // O(n)
         {
             if (node == null)
             {
@@ -109,9 +109,7 @@ namespace AlgorithmProjectHospital.Structures
             ErrEmpty();
         }
 
-
-        public void AddAfter(SingleNode<T> refNode, 
-            SingleNode<T> newNode)
+        public void AddAfter(SingleNode<T> refNode, SingleNode<T> newNode) // O(n)
         {
 
             if (refNode == null || newNode == null)
@@ -137,7 +135,7 @@ namespace AlgorithmProjectHospital.Structures
             ErrEmpty();
         }
 
-        public void AddBefore(SingleNode<T> refNode, SingleNode<T> newNode)
+        public void AddBefore(SingleNode<T> refNode, SingleNode<T> newNode) // O(n)
         {
             if (refNode == null || newNode == null)
                 throw new ArgumentNullException();
@@ -161,8 +159,7 @@ namespace AlgorithmProjectHospital.Structures
             }
             ErrEmpty();
         }
-
-        public bool RemoveByID(string id)
+        public bool RemoveByID(string id) // O(n)
         {
             if (Head == null || id == null)
                 return false;
@@ -189,21 +186,12 @@ namespace AlgorithmProjectHospital.Structures
             return false;
         }
 
-        public void Clear()
-        {
-            Head = null;
-        }
+        public void Clear() => Head = null; // O(1)
 
-        private string ErrEmpty() => throw new InvalidOperationException("A node does not exist here.");
+        private string ErrEmpty() => throw new InvalidOperationException("A node does not exist here."); // O(1)
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return new SinglyLinkedListEnumerator<T>(Head);
-        }
+        public IEnumerator<T> GetEnumerator() => new SinglyLinkedListEnumerator<T>(Head); // O(n)
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator(); // O(n)
     }
 }

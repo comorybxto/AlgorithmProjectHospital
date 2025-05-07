@@ -8,29 +8,31 @@ namespace AlgorithmProjectHospital.Structures.BST
 {
     internal class TreeNode<T> where T : IComparable<T>
     {
-        public T Value;
+        public T Value { get; set; }
+        public TreeNode<T> RightNode { get; set; }
+        public TreeNode<T> LeftNode { get; set; }
+        public bool IsDeleted { get; private set; }
 
-        public TreeNode<T> RightNode;
-        public TreeNode<T> LeftNode;
-        public bool IsDeleted;
-
-        public TreeNode(T value){
+        public TreeNode(T value) // O(1)
+        {
             IsDeleted = false;
             this.Value = value;
         }
-        public void Delete()
-        {
-            IsDeleted = true;
-        }
+        public void Delete() => IsDeleted = true; // O(1)
 
-        public TreeNode<T> Find(T value) {
+        public TreeNode<T> Find(T value) // O(log n)
+        {
             TreeNode<T> currentNode = this;
-            while (currentNode != null) {
-                if (value.CompareTo(currentNode.Value)==0 && IsDeleted == false)
+            while (currentNode != null)
+            {
+                if (value.CompareTo(currentNode.Value) == 0)
                 {
-                    return currentNode;
+                    if (currentNode.IsDeleted)
+                        return null;
+                    else
+                        return currentNode;
                 }
-                else if (value.CompareTo(currentNode.Value) > 0 )
+                else if (value.CompareTo(currentNode.Value) > 0)
                 {
                     currentNode = currentNode.RightNode;
                 }
@@ -38,10 +40,10 @@ namespace AlgorithmProjectHospital.Structures.BST
                     currentNode = currentNode.LeftNode;
             }
             return null;
-            //throw new InvalidOperationException("A node does not exist here.");
         }
 
-        public void Insert(T value) {
+        public void Insert(T value) // O(log n)
+        { 
             TreeNode<T> currentNode = this;
             if (value.CompareTo(currentNode.Value) >= 0)
             {
@@ -66,8 +68,6 @@ namespace AlgorithmProjectHospital.Structures.BST
                 }
             }
         }
-
-
 
     }
 }

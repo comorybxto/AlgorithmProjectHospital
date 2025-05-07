@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace AlgorithmProjectHospital.Structures
@@ -8,36 +9,22 @@ namespace AlgorithmProjectHospital.Structures
         private SingleNode<T> Head;
         private SingleNode<T> _current;
 
-        public SinglyLinkedListEnumerator(SingleNode<T> head)
+        public SinglyLinkedListEnumerator(SingleNode<T> head) // O(1)
         {
             Head = head;
             _current = null;
         }
-        public T Current => _current.Value;
+        public T Current => _current != null ? _current.Value : throw new InvalidOperationException("Enumerator is before the start or after the end of the collection.");
+
         object IEnumerator.Current => Current;
 
-        public void Dispose()
+        public bool MoveNext() // O(1)
         {
-            Head = null;
+            _current = _current == null ? Head : _current.Next;
+            return _current != null;
         }
+        public void Dispose() => Head = null; // O(1)
 
-        public bool MoveNext()
-        {
-            if (_current == null)
-            {
-                _current = Head;
-                return true;
-            }
-            else
-            {
-                _current = _current.Next;
-                return _current != null; //? true : false;  
-            }
-        }
-
-        public void Reset()
-        {
-            _current = null;
-        }
+        public void Reset() => _current = null; // O(1)
     }
 }

@@ -12,29 +12,31 @@ namespace AlgorithmProjectHospital.Structures
         public SingleNode<T> Head { get; set; }
         public SingleNode<T> Tail { get; set; }
 
-        public Queue()
+        public Queue() // O(1)
         {
         }
 
-        public Queue(IEnumerable<T> collection)
+        public Queue(IEnumerable<T> collection) // O(n)
         {
             foreach (var item in collection)
                 this.Enqueue(item);
         }
-        public void Enqueue(T value)
+        public void Enqueue(T value) // O(1)
         {
             var data = new SingleNode<T>(value);
             if (Head == null)
             {
                 Head = Tail = data;
             }
-            else {
+            else
+            {
                 Tail.Next = data;
                 Tail = data;
             }
         }
 
-        public T Dequeue() {
+        public T Dequeue() // O(1)
+        {
             if (Head == null)
                 ErrEmpty();
             T data = Head.Value;
@@ -42,27 +44,27 @@ namespace AlgorithmProjectHospital.Structures
             return data;
         }
 
-        public T Peek()
+        public T Peek() // O(1)
         {
             if (IsEmpty())
                 ErrEmpty();
-            return Tail.Value;
+            return Head.Value;
         }
 
-        public Queue<T> Clone()
+        public Queue<T> Clone() // O(n)
         {
             return new Queue<T>(this);
         }
 
-        public void Clear()
+        public void Clear() // O(1)
         {
             Head = Tail = null;
         }
 
-        public bool IsEmpty() => Head == null;
+        public bool IsEmpty() => Head == null; // O(1)
         private string ErrEmpty() => throw new InvalidOperationException("This queue is empty!");
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<T> GetEnumerator() // O(n)
         {
             SingleNode<T> current = Head;
             while (current != null)
@@ -72,10 +74,7 @@ namespace AlgorithmProjectHospital.Structures
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator(); // O(n)
     }
 
-    }
+}

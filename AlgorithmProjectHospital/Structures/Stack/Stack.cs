@@ -17,20 +17,21 @@ namespace AlgorithmProjectHospital.Structures
         {
         }
 
-        public Stack(IEnumerable<T> collection)
+        public Stack(IEnumerable<T> collection) // O(n)
         {
             foreach (var item in collection)
                 this.Push(item);
         }
 
-        public void Push(T value)
+        public void Push(T value)  // O(1)
         {
             var newNode = new SingleNode<T>(value);
             newNode.Next = Head;
             Head = newNode;
         }
    
-        public T Pop() {
+        public T Pop() // O(1)
+        {
             if (IsEmpty())
                 ErrEmpty();
             T data = Head.Value;
@@ -38,23 +39,20 @@ namespace AlgorithmProjectHospital.Structures
             return data;
         }
 
-        public T Peek()
+        public T Peek() // O(1)
         {
             if (IsEmpty())
                 ErrEmpty();
             return Head.Value;
         }
 
-        public Stack<T> Clone()
-        {
-            return new Stack<T>(this);
-        }
+        public Stack<T> Clone() => new Stack<T>(this); // O(n)
 
-        public bool IsEmpty() => Head == null;
+        public bool IsEmpty() => Head == null; // O(1)
 
-        private string ErrEmpty() => throw new InvalidOperationException("This stack is empty!");
+        private string ErrEmpty() => throw new InvalidOperationException("This stack is empty!"); // O(1)
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<T> GetEnumerator() // O(n)
         {
             SingleNode<T> current = Head;
             while (current != null)
@@ -64,10 +62,7 @@ namespace AlgorithmProjectHospital.Structures
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-        
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator(); // O(n)
+
     }
 }
