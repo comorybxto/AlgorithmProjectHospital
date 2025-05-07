@@ -48,8 +48,11 @@ namespace AlgorithmProjectHospital
         /// <param name="examination">An Examination object containing the examination details.</param>
         public void AddExaminationInfo(Examination examination)
         {
-            LastExamination = examination.Date;
-            Diagnosis = examination.Diagnosis;
+            if (LastExamination == default || examination.Date > LastExamination)
+            {
+                LastExamination = examination.Date;
+                Diagnosis = examination.Diagnosis;
+            }
             ExaminationHistory.Push(examination);
         }
 

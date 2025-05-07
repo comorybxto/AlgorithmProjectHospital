@@ -139,6 +139,8 @@ namespace AlgorithmProjectHospital
             Console.WriteLine("5) Remove (by ID)");
             Console.WriteLine("6) Clear All");
             Console.WriteLine("7) Show All Patients");
+            Console.WriteLine("8) Add Examination Information to an Existing Patient");
+            Console.WriteLine("9) Return to Main Menu");
             Asterisk();
 
             Console.Write("Select an option: ");
@@ -201,6 +203,12 @@ namespace AlgorithmProjectHospital
                     }
                     foreach (var p in patientList)
                         Console.WriteLine(p);
+                    break;
+                case "8":
+                    InputExamInfoToExistingPatient();
+                    break;
+                case "9":
+                    Console.Clear();
                     break;
                 default:
                     Console.WriteLine("Invalid choice.");
@@ -279,6 +287,7 @@ namespace AlgorithmProjectHospital
             }
             InitializeBST();
 
+            Console.WriteLine();
             Title("Patient Search Menu");
 
             Console.Write("\nEnter Patient ID to search (11 digits): ");
@@ -288,8 +297,12 @@ namespace AlgorithmProjectHospital
             else
             {
                 Console.Write("Patient not found. Press C to continue searching. ");
-                if (Console.ReadKey().Key == ConsoleKey.C)
-                    SearchMenu(); 
+                if (Console.ReadKey().Key == ConsoleKey.C) {
+                    Console.WriteLine();
+                    SearchMenu();
+                }
+                Console.Write("\nPress any key to return to the menu. ");
+                Console.ReadKey();
                 Console.Clear();
             }
         }
@@ -318,7 +331,7 @@ namespace AlgorithmProjectHospital
             do
             {
                 Console.Write("Enter Patient Gender (M/F): ");
-                gender = Console.ReadLine()[0];
+                gender = char.ToUpper(Console.ReadLine()[0]);
                 if (gender != 'M' && gender != 'F')
                     Console.WriteLine("Invalid input. Please enter 'M' for Male or 'F' for Female.");
             } while (gender != 'M' && gender != 'F');
@@ -332,19 +345,19 @@ namespace AlgorithmProjectHospital
 
             Patient newPatient = new Patient(id, name, gender, birthDate);
 
-            Console.Write("\nPress E to add examination information. ");
-            if (Console.ReadKey().Key == ConsoleKey.E)
-            {
+            Console.WriteLine("\nAdd examination information.");
+            //if (Console.ReadKey().Key == ConsoleKey.E)
+            //{
                 Console.WriteLine();
                 newPatient.AddExaminationInfo(InputExaminationInformation());
-            }
-
-            return newPatient;
+            //}
+                return newPatient;
         }
         public static void AddEmergencyPatient()
         {
             Patient newPatient = InputNewPatient();
             emergencyQueue.Enqueue(newPatient);
+            patientList.AddFirst(newPatient);
         }
 
         public static Examination InputExaminationInformation()
@@ -367,6 +380,47 @@ namespace AlgorithmProjectHospital
             return newExamination;
 
         }
+
+        public static void InputExamInfoToExistingPatient()
+        {
+            Title("Enter New Examination Information to an Existing Patient");
+
+            Console.Write("\nEnter the patient ID: ");
+            string id = Console.ReadLine();
+
+            var current = patientList.Head;
+            while (current != null && current.Value.IDno != id)
+                current = current.Next;
+
+            if (current == null)
+            {
+                Console.WriteLine("Patient not found.");
+                return;
+            }
+
+
+            if (patientBST.TryFind(Patient.WithID(id), out Patient found))
+            {
+
+                if (found.ExaminationHistory.IsEmpty())
+                    Console.WriteLine("Examination history is empty.");
+                else
+                {
+                    Console.WriteLine($"\n{found.IDno,-5} {found.Fullname,-15}");
+                    var clone = found.ExaminationHistory.Clone();
+                    foreach (var info in clone)
+                        Console.WriteLine($">> {clone.Pop()}");
+                    Console.WriteLine();
+
+                }
+            }
+
+            Console.WriteLine("Enter new examination information.");
+            Examination newExam = InputExaminationInformation();
+            current.Value.AddExaminationInfo(newExam);
+            Console.WriteLine("Examination information was added successfully.");
+        }
+
 
         public static void DeletePatientByID(string id)
         {
