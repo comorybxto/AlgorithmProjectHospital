@@ -1,10 +1,7 @@
 ﻿using AlgorithmProjectHospital.Structures;
 using AlgorithmProjectHospital.Structures.BST;
 using System;
-using System.CodeDom;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AlgorithmProjectHospital
 {
@@ -25,7 +22,7 @@ namespace AlgorithmProjectHospital
                 Title("    Main Menu    ");
                 Console.WriteLine("1) Patient Registration");
                 Console.WriteLine("2) Emergency Patient Registration");
-                Console.WriteLine("3) Examination History");
+                Console.WriteLine("3) Examination Operations");
                 Console.WriteLine("4) Search by ID");
                 Console.WriteLine("5) Exit");
                 Asterisk();
@@ -43,7 +40,7 @@ namespace AlgorithmProjectHospital
                         EmergencyRegistrationMenu();
                         break;
                     case "3":
-                        ExaminationHistory();
+                        ExaminationOperations();
                         break;
                     case "4":
                         SearchMenu();
@@ -60,7 +57,7 @@ namespace AlgorithmProjectHospital
         static void InitializePatients()
         {
             Patient patient0 = new Patient("58019273645", "Selin Yalçın", 'F', new DateTime(1995, 12, 19));
-            patient0.AddExaminationInfo(new DateTime(2024, 4, 24), "Status asthmaticus", "Nebulized bronchodilators, Corticosteroids, Oxygen\r\n\r\n");
+            patient0.AddExaminationInfo(new DateTime(2024, 4, 24), "Status asthmaticus", "Nebulized bronchodilators, Corticosteroids, Oxygen");
 
             //Showcasing a different way of creating patients
             // Create an array of patients and assigning examination information to them
@@ -120,7 +117,6 @@ namespace AlgorithmProjectHospital
 
         static void InitializeBST()
         {
-
             // Fill Binary Search Tree
             patientBST = new BinarySearchTree<Patient>();
 
@@ -139,8 +135,7 @@ namespace AlgorithmProjectHospital
             Console.WriteLine("5) Remove (by ID)");
             Console.WriteLine("6) Clear All");
             Console.WriteLine("7) Show All Patients");
-            Console.WriteLine("8) Add Examination Information to an Existing Patient");
-            Console.WriteLine("9) Return to Main Menu");
+            Console.WriteLine("8) Return to Main Menu");
             Asterisk();
 
             Console.Write("Select an option: ");
@@ -159,6 +154,8 @@ namespace AlgorithmProjectHospital
                     patientList.AddLast(InputNewPatient());
                     break;
                 case "3":
+                    ListPatients();
+                    Console.WriteLine();
                     Console.Write("Enter reference ID to insert before: ");
                     string referenceID = Console.ReadLine();
 
@@ -173,6 +170,8 @@ namespace AlgorithmProjectHospital
                     break;
 
                 case "4":
+                    ListPatients();
+                    Console.WriteLine();
                     Console.Write("Enter reference ID to insert after: ");
                     referenceID = Console.ReadLine();
                     current = patientList.Head;
@@ -184,6 +183,8 @@ namespace AlgorithmProjectHospital
                     else Console.WriteLine("Patient not found.");
                     break;
                 case "5":
+                    ListPatients();
+                    Console.WriteLine();
                     Console.Write("Enter ID to delete: ");
                     string idToDelete = Console.ReadLine();
                     bool deleted = patientList.RemoveByID(idToDelete);
@@ -195,26 +196,27 @@ namespace AlgorithmProjectHospital
                     Console.WriteLine("All patients have been cleared.");
                     break;
                 case "7":
-                    Title("Patient List");
-                    if (patientList.Head == null)
-                    {
-                        Console.WriteLine("Patient List is empty.");
-                        break;
-                    }
-                    foreach (var p in patientList)
-                        Console.WriteLine(p);
+                    ListPatients();
                     break;
                 case "8":
-                    InputExamInfoToExistingPatient();
-                    break;
-                case "9":
                     Console.Clear();
                     break;
                 default:
                     Console.WriteLine("Invalid choice.");
                     break;
             }
+        }
 
+        private static void ListPatients()
+        {
+            Title("Patient List");
+            if (patientList.Head == null)
+            {
+                Console.WriteLine("Patient List is empty.");
+                return;
+            }
+            foreach (var p in patientList)
+                Console.WriteLine(p);
         }
 
         static void EmergencyRegistrationMenu()
@@ -258,6 +260,43 @@ namespace AlgorithmProjectHospital
             }
         }
 
+        static void ExaminationOperations()
+        {
+            Asterisk();
+            Title("Examination Operations");
+            Console.WriteLine("1) Examination history");
+            Console.WriteLine("2) Add examination information to an existing patient");
+            Console.WriteLine("3) Delete most recent examination information from a patient");
+            Console.WriteLine("4) Return to main menu");
+            Asterisk();
+
+            Console.Write("\nSelect an option: ");
+            string input = Console.ReadLine();
+
+            Console.WriteLine();
+
+            switch (input)
+            {
+                case "1":
+                    ExaminationHistory();
+                    break;
+
+                case "2":
+                    InputExamInfoToExistingPatient();
+                    break;
+                case "3":
+                    PopExaminationInfo();
+                    break;
+                case "4":
+                    Console.Clear();
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid selection. Try again.");
+                    break;
+            }
+        }
+
         static void ExaminationHistory()
         {
             Title("Examination History");
@@ -278,8 +317,6 @@ namespace AlgorithmProjectHospital
 
         static void SearchMenu()
         {
-
-
             if (patientList.Head == null)
             {
                 Console.WriteLine("\nCannot search: Patient List is empty.\n\n");
@@ -346,12 +383,9 @@ namespace AlgorithmProjectHospital
             Patient newPatient = new Patient(id, name, gender, birthDate);
 
             Console.WriteLine("\nAdd examination information.");
-            //if (Console.ReadKey().Key == ConsoleKey.E)
-            //{
-                Console.WriteLine();
-                newPatient.AddExaminationInfo(InputExaminationInformation());
-            //}
-                return newPatient;
+            Console.WriteLine();
+            newPatient.AddExaminationInfo(InputExaminationInformation());
+            return newPatient;
         }
         public static void AddEmergencyPatient()
         {
@@ -378,26 +412,16 @@ namespace AlgorithmProjectHospital
 
             Examination newExamination = new Examination(date, diagnosis, treatment);
             return newExamination;
-
         }
 
         public static void InputExamInfoToExistingPatient()
         {
+            ListPatients();
+            Console.WriteLine();
             Title("Enter New Examination Information to an Existing Patient");
 
             Console.Write("\nEnter the patient ID: ");
             string id = Console.ReadLine();
-
-            var current = patientList.Head;
-            while (current != null && current.Value.IDno != id)
-                current = current.Next;
-
-            if (current == null)
-            {
-                Console.WriteLine("Patient not found.");
-                return;
-            }
-
 
             if (patientBST.TryFind(Patient.WithID(id), out Patient found))
             {
@@ -406,21 +430,73 @@ namespace AlgorithmProjectHospital
                     Console.WriteLine("Examination history is empty.");
                 else
                 {
-                    Console.WriteLine($"\n{found.IDno,-5} {found.Fullname,-15}");
-                    var clone = found.ExaminationHistory.Clone();
-                    foreach (var info in clone)
-                        Console.WriteLine($">> {clone.Pop()}");
+                    PrintExaminationHistory(found);
                     Console.WriteLine();
-
                 }
+            }
+            else
+            {
+                Console.WriteLine("Patient was not found.\n");
+                return;
             }
 
             Console.WriteLine("Enter new examination information.");
             Examination newExam = InputExaminationInformation();
-            current.Value.AddExaminationInfo(newExam);
+
+            Console.WriteLine();
+
+            // Try to add the examination information and handle the return value.
+            bool addedSuccessfully = found.AddExaminationInfo(newExam);
+            if (!addedSuccessfully)
+            {
+                Console.WriteLine("Duplicate examination information. Entry was not added.");
+                return;
+            }
             Console.WriteLine("Examination information was added successfully.");
+            PrintExaminationHistory(found);
         }
 
+        public static void PopExaminationInfo() // Delete submission which has an error
+        {
+            ListPatients();
+            Console.WriteLine();
+            Title("Delete Most Recent Examination Information");
+
+            Console.Write("\nEnter the patient ID: ");
+            string id = Console.ReadLine();
+
+            if (patientBST.TryFind(Patient.WithID(id), out Patient found))
+            {
+                var originalStack = found.ExaminationHistory;
+                if (originalStack.IsEmpty()) // the original stack
+                {
+                    Console.WriteLine("Examination history is empty.");
+                    return;
+                }
+
+                PrintExaminationHistory(found);
+
+                originalStack.Pop(); // Remove the most recent examination
+                Console.WriteLine("\nThe most recent examination information was deleted successfully.");
+
+                PrintExaminationHistory(found);
+
+                Console.WriteLine("\nPress any key to return to the menu.");
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else
+            {
+                Console.WriteLine("Patient was not found.");
+                return;
+            }
+        }
+        private static void PrintExaminationHistory(Patient patient)
+        {
+            Console.WriteLine($"\n{patient.IDno,-5} {patient.Fullname,-15}");
+            foreach (var info in patient.ExaminationHistory.Clone())
+                Console.WriteLine($">> {info}");
+        }
 
         public static void DeletePatientByID(string id)
         {

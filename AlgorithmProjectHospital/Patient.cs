@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AlgorithmProjectHospital.Structures;
 
 namespace AlgorithmProjectHospital
@@ -44,16 +41,25 @@ namespace AlgorithmProjectHospital
 
         /// <summary>
         /// Adds a new examination to the patient's examination history.
+        /// Does not allow duplicate entries.
         /// </summary>
         /// <param name="examination">An Examination object containing the examination details.</param>
-        public void AddExaminationInfo(Examination examination)
+        public bool AddExaminationInfo(Examination examination)
         {
+            foreach (var existing in ExaminationHistory)
+            {
+                if (existing.Equals(examination))
+                    return false; // Duplicate was found.
+            }
+
+            // Update last examination information if applicable.
             if (LastExamination == default || examination.Date > LastExamination)
             {
                 LastExamination = examination.Date;
                 Diagnosis = examination.Diagnosis;
             }
             ExaminationHistory.Push(examination);
+            return true;
         }
 
         /// <summary>
